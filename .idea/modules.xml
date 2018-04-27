@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PolitiekeBarometer.iml" filepath="$PROJECT_DIR$/PolitiekeBarometer.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/integratieproject_T13_android.iml" filepath="$PROJECT_DIR$/integratieproject_T13_android.iml" />
     </modules>
   </component>
 </project>
