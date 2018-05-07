@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:contentInsetStart="0dp"
+    android:contentInsetLeft="0dp"
+    app:contentInsetStart="0dp"
+    app:contentInsetLeft="0dp"
+    app:contentInsetStartWithNavigation="0dp">
+
+    <item android:id="@+id/action_search"
+        android:title="Zoeken"
+        android:icon="@drawable/ic_search_24dp"
+        app:showAsAction="always"
+        app:actionLayout="@layout/search_view"
+        app:actionViewClass="android.widget.SearchView"/>
+    <item
+        android:id="@+id/action_logout"
+        android:icon="@drawable/ic_user_24dp"
+        android:title="Uitloggen"
+        app:showAsAction="never"/>
+</menu>

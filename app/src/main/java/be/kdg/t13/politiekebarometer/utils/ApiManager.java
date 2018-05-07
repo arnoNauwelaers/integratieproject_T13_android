@@ -1,8 +1,15 @@
 package be.kdg.t13.politiekebarometer.utils;
 
+import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import be.kdg.t13.politiekebarometer.model.Item;
+import be.kdg.t13.politiekebarometer.model.Notification;
 import be.kdg.t13.politiekebarometer.service.PolitiekeBarometerService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,7 +28,6 @@ public class ApiManager {
     private static Retrofit retrofit;
     private static PolitiekeBarometerService service;
 
-    protected ApiManager() { }
     public static ApiManager getInstance() {
         if(instance == null) {
             instance = new ApiManager();
@@ -46,5 +52,47 @@ public class ApiManager {
             }
         });
         return userId[0];
+    }
+
+    public static List<Notification> getNotifications() {
+        final List<Notification> notifications = new ArrayList<>();
+        Call<Notification[]> call = service.getNotifications();
+        call.enqueue(new Callback<Notification[]>() {
+            @Override
+            public void onResponse(Call<Notification[]> call, Response<Notification[]> response) {
+                notifications.add(new Notification(1, response.body().toString()));
+            }
+            @Override
+            public void onFailure(Call<Notification[]> call, Throwable t) {
+                notifications.add(new Notification(1, "Error"));
+            }
+        });
+        notifications.add(new Notification(1,"test"));
+        notifications.add(new Notification(1,"bart de wever"));
+        notifications.add(new Notification(1,"theo"));
+        return notifications;
+    }
+
+    public static List<Item> getSearchResults() {
+        final List<Item> items = new ArrayList<>();
+        Call<Item[]> call = service.getSearchResults();
+        call.enqueue(new Callback<Item[]>() {
+            @Override
+            public void onResponse(Call<Item[]> call, Response<Item[]> response) {
+                String[] itemsStrings = response.body().toString().split(",");
+                for(String itemString : itemsStrings) {
+                    //NEW ITEM ATTRIBUTEN TOEVOEGEN
+                    items.add(new Item());
+                }
+            }
+            @Override
+            public void onFailure(Call<Item[]> call, Throwable t) {
+                //error
+            }
+        });
+        items.add(new Item());
+        items.add(new Item());
+        items.add(new Item());
+        return items;
     }
 }
