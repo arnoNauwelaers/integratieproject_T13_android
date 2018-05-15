@@ -20,6 +20,7 @@ import android.widget.SearchView;
 import java.util.HashMap;
 import java.util.Map;
 
+import be.kdg.t13.politiekebarometer.utils.ApiManager;
 import be.kdg.t13.politiekebarometer.utils.UserManager;
 import be.kdg.t13.politiekebarometer.view.dashboard.DashboardFragment;
 import be.kdg.t13.politiekebarometer.view.home.HomeFragment;
@@ -36,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.navigation) BottomNavigationView navigation;
     public String CURRENT_FRAGMENT = "";
     private String previousSearch = "";
+
+    public static boolean LOADING = false;
+    public static BottomNavigationView NAV;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -105,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        NAV = navigation;
         addEventHandlers();
         finishCreate();
     }
@@ -137,8 +142,15 @@ public class MainActivity extends AppCompatActivity {
         changeFragment(HomeFragment.newInstance());
     }
 
+    public void changeFragmentFromOuterClass(Fragment f, String title) {
+        getSupportActionBar().setTitle(title);
+        changeFragment(f);
+    }
+
     private void changeFragment(Fragment f) {
+        if(LOADING) { return; }
         CURRENT_FRAGMENT = f.getClass().getName();
+        ApiManager.getInstance().testApi(this);
         getSupportFragmentManager().beginTransaction()
                 .replace(content.getId(), f, f.getClass().getName())
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -169,5 +181,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         changeFragmentWithArgs(f, args);
+    }
+    public static void setLoading(boolean loading) {
+        //NAV.setVisibility(loading?View.GONE:View.VISIBLE);
+        LOADING = loading;
     }
 }

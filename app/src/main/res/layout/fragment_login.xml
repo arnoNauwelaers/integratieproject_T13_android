@@ -25,6 +25,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
         <!-- Email Label -->
+
         <TextView
             android:id="@+id/loginText"
             android:layout_width="match_parent"
@@ -32,6 +33,16 @@
             android:gravity="center_horizontal"
             android:text="Inloggen"
             android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+
+        <TextView
+            android:id="@+id/txtError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:text="Er is iets misgelopen bij het inloggen, gelieve uw inloggegevens na te kijken."
+            android:textColor="@android:color/holo_red_light" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -66,5 +77,13 @@
             android:layout_marginBottom="24dp"
             android:padding="12dp"
             android:text="Login"/>
+
+        <ProgressBar
+            android:id="@+id/loginSpinner"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
+
 </ScrollView>

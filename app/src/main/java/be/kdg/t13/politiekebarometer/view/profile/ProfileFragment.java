@@ -1,12 +1,16 @@
 package be.kdg.t13.politiekebarometer.view.profile;
 
 import android.os.Bundle;
+import android.os.UserManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import be.kdg.t13.politiekebarometer.R;
+import be.kdg.t13.politiekebarometer.utils.ApiManager;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 

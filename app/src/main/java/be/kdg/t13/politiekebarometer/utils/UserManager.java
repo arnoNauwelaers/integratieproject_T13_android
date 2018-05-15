@@ -32,7 +32,7 @@ public class UserManager {
         if(instance == null) {
             instance = new UserManager();
             notifications = new ArrayList<>();
-            updateNotifications();
+            //updateNotifications();
         }
         return instance;
     }
@@ -45,13 +45,23 @@ public class UserManager {
         return user != null;
     }
 
-    public static void logIn(String username, String password) {
+    /*public static void logIn(String username, String password) {
         int id = ApiManager.getInstance().login(username, password);
         user = new User(id, username, password, "");
+    }*/
+
+    public static void finishRequestToken() {
+        String token = ApiManager.getInstance().getToken();
+        if(token != null && !token.isEmpty()) {
+            user = new User(1, "", "", "");
+        }else{
+            user = null;
+        }
     }
 
     public static void logOut() {
         user = null;
+        ApiManager.getInstance().resetToken();
     }
 
     public static void redirectToLogin(MainActivity a) {
@@ -69,6 +79,7 @@ public class UserManager {
     }
 
     public static List<Notification> getNotifications() {
+        updateNotifications();
         return notifications;
     }
 }
