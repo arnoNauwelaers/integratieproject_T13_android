@@ -1,6 +1,7 @@
 package be.kdg.t13.politiekebarometer.utils;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.support.v4.app.FragmentTransaction;
 
 import com.google.gson.Gson;
@@ -45,23 +46,34 @@ public class UserManager {
         return user != null;
     }
 
-    /*public static void logIn(String username, String password) {
-        int id = ApiManager.getInstance().login(username, password);
-        user = new User(id, username, password, "");
-    }*/
-
-    public static void finishRequestToken() {
+    public static void finishRequestToken(MainActivity a) {
         String token = ApiManager.getInstance().getToken();
         if(token != null && !token.isEmpty()) {
-            user = new User(1, "", "", "");
+            ApiManager.getInstance().setUserInfo(a);
+            saveTokenToDevice(a);
         }else{
             user = null;
         }
     }
 
-    public static void logOut() {
+    public static void saveTokenToDevice(MainActivity a) {
+        SharedPreferences settings = a.getSharedPreferences("POLITIEKE_BAROMETER", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("ACCESS_TOKEN", ApiManager.getInstance().getToken());
+        editor.apply();
+    }
+
+    public static void getTokenFromDevice(MainActivity a) {
+        SharedPreferences settings = a.getSharedPreferences("POLITIEKE_BAROMETER", 0);
+        ApiManager.setToken(settings.getString("ACCESS_TOKEN", "000"), a);
+        if(ApiManager.getToken() != null && !ApiManager.getToken().isEmpty() && !ApiManager.getToken().equals("000")) {
+            ApiManager.getInstance().setUserInfo(a);
+        }
+    }
+
+    public static void logOut(MainActivity a) {
         user = null;
-        ApiManager.getInstance().resetToken();
+        ApiManager.getInstance().resetToken(a);
     }
 
     public static void redirectToLogin(MainActivity a) {
@@ -75,11 +87,15 @@ public class UserManager {
     }
 
     public static void updateNotifications() {
-        notifications = ApiManager.getInstance().getNotifications();
+        //notifications = ApiManager.getInstance().getNotifications();
     }
 
     public static List<Notification> getNotifications() {
         updateNotifications();
         return notifications;
+    }
+
+    public static void setUser(User u) {
+        user = u;
     }
 }

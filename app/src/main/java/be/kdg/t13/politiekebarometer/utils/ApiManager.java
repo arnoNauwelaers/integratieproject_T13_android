@@ -1,5 +1,6 @@
 package be.kdg.t13.politiekebarometer.utils;
 
+import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -19,6 +21,7 @@ import javax.net.ssl.X509TrustManager;
 
 import be.kdg.t13.politiekebarometer.MainActivity;
 import be.kdg.t13.politiekebarometer.model.Notification;
+import be.kdg.t13.politiekebarometer.model.User;
 import be.kdg.t13.politiekebarometer.service.PolitiekeBarometerService;
 import be.kdg.t13.politiekebarometer.service.TokenRequest;
 import be.kdg.t13.politiekebarometer.view.dashboard.DashboardFragment;
@@ -62,11 +65,24 @@ public class ApiManager {
         return instance;
     }
 
-    public String getToken() {
+    public static String getToken() {
         return APITOKEN;
     }
-    public void resetToken() {
-        APITOKEN = null;
+
+    public static void setToken(String token, MainActivity a) {
+        APITOKEN = token;
+        SharedPreferences settings = a.getSharedPreferences("POLITIEKE_BAROMETER", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("ACCESS_TOKEN", ApiManager.getInstance().getToken());
+        editor.apply();
+    }
+
+    public static void resetToken(MainActivity a) {
+        APITOKEN = "000";
+        SharedPreferences settings = a.getSharedPreferences("POLITIEKE_BAROMETER", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("ACCESS_TOKEN", ApiManager.getInstance().getToken());
+        editor.apply();
     }
 
     public void testApi(final MainActivity c) {
@@ -89,75 +105,76 @@ public class ApiManager {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 APITOKEN = response.body();
-                LoginFragment.finishLogin(a, frag);
-                a.changeFragmentFromOuterClass(DashboardFragment.newInstance(), "Dashboard");
+                if(APITOKEN==null||APITOKEN.isEmpty()||APITOKEN.equals("000")) {
+                    LoginFragment.finishLogin(a, frag, true);
+                }else{
+                    LoginFragment.finishLogin(a, frag, false);
+                }
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                APITOKEN = "test";
-            } {
-                LoginFragment.finishLogin(a, frag);
+                APITOKEN = "000";
+                LoginFragment.finishLogin(a, frag, true);
             }
         });
     }
 
-    /*public int login(String username, String password) {
-        final int[] userId = new int[1];
-        Call<Integer> call = service.login(username, password);
-        call.enqueue(new Callback<Integer>() {
-            @Override
-            public void onResponse(Call<Integer> call, Response<Integer> response) {
-                userId[0] = response.body();
-            }
-            @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
-                userId[0] = -1;
-            }
-        });
-        return userId[0];
-    }*/
-
-    public List<Notification> getNotifications() {
+    /*public List<Notification> getNotifications() {
         final List<Notification> notifications = new ArrayList<>();
-        /*Call<Notification[]> call = service.getNotifications();
-        call.enqueue(new Callback<Notification[]>() {
+        Call<List<Notification>> call = service.getNotifications();
+        call.enqueue(new Callback<List<Notification>>() {
             @Override
-            public void onResponse(Call<Notification[]> call, Response<Notification[]> response) {
+            public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
                 notifications.add(new Notification(1, response.body().toString()));
             }
             @Override
-            public void onFailure(Call<Notification[]> call, Throwable t) {
+            public void onFailure(Call<List<Notification>> call, Throwable t) {
                 notifications.add(new Notification(1, "Error"));
             }
-        });*/
+        });
         notifications.add(new Notification(1,"test"));
         notifications.add(new Notification(1,"bart de wever"));
         notifications.add(new Notification(1,"theo"));
         return notifications;
+    }*/
+
+    public void setUserInfo(final MainActivity a) {
+        Call<User> call = service.getUserInfo();
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                UserManager.setUser(new User(response.body().getId(), response.body().getUsername()));
+                a.changeFragmentFromOuterClass(DashboardFragment.newInstance(), "Dashboard");
+            }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
     }
 
-    /*public List<Item> getSearchResults() {
-        final List<Item> items = new ArrayList<>();
-        Call<Item[]> call = service.getSearchResults();
-        call.enqueue(new Callback<Item[]>() {
+    public List<String> getSearchResults() {
+        final List<String> items = new ArrayList<>();
+        Call<List<String>> call = service.getSearchResults();
+        call.enqueue(new Callback<List<String>>() {
             @Override
-            public void onResponse(Call<Item[]> call, Response<Item[]> response) {
+            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
                 String[] itemsStrings = response.body().toString().split(",");
                 for(String itemString : itemsStrings) {
                     //NEW ITEM ATTRIBUTEN TOEVOEGEN
-                    items.add(new Item());
+                    items.add("test");
                 }
             }
             @Override
-            public void onFailure(Call<Item[]> call, Throwable t) {
+            public void onFailure(Call<List<String>> call, Throwable t) {
                 //error
             }
         });
-        items.add(new Item());
-        items.add(new Item());
-        items.add(new Item());
+        items.add("test");
+        items.add("test");
+        items.add("test");
         return items;
-    }*/
+    }
 
 
     //https://stackoverflow.com/questions/25509296/trusting-all-certificates-with-okhttp
@@ -201,7 +218,11 @@ public class ApiManager {
                 @Override
                 public okhttp3.Response intercept(Chain chain) throws IOException {
                     Request originalRequest = chain.request();
-                    Request.Builder builder = originalRequest.newBuilder().header("Authorization", Credentials.basic("aUsername", "aPassword")).header("Host", "localhost");
+                    String token = ApiManager.getInstance().getToken();
+                    if(token == null||token.isEmpty()) {
+                        token = "000";
+                    }
+                    Request.Builder builder = originalRequest.newBuilder().header("Authorization", token).header("Host", "localhost");
                     Request newRequest = builder.build();
                     return chain.proceed(newRequest);
                 }

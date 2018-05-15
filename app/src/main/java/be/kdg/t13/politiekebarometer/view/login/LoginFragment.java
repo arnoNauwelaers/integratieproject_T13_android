@@ -75,11 +75,11 @@ public class LoginFragment extends Fragment {
         btnLogin.setVisibility(View.VISIBLE);
         spinner.setVisibility(View.GONE);
     }
-    public static void finishLogin(MainActivity a, LoginFragment frag) {
+    public static void finishLogin(MainActivity a, LoginFragment frag, boolean error) {
         String token = ApiManager.getInstance().getToken();
-        UserManager.finishRequestToken();
+        UserManager.finishRequestToken(a);
         if(token == null || token.isEmpty()) {
-            frag.showForm(true);
+            frag.showForm(error);
         }
         MainActivity.setLoading(false);
     }

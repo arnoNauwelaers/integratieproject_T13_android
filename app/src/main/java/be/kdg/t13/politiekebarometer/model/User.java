@@ -1,27 +1,27 @@
 package be.kdg.t13.politiekebarometer.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by bague on 27/04/2018.
  */
 
 public class User {
-    private int id;
+    @SerializedName("Id")
+    private String id;
+    @SerializedName("Username")
     private String username;
-    private String password;
-    private String email;
 
-    public User(int id, String username, String password, String email) {
+    public User(String id, String username) {
         setId(id);
         setUsername(username);
-        setPassword(password);
-        setEmail(email);
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -33,19 +33,8 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    @Override
+    public String toString() {
+        return "ID: "+id+" - USERNAME: "+username;
     }
 }

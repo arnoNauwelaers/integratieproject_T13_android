@@ -1,9 +1,11 @@
 package be.kdg.t13.politiekebarometer.service;
 
+import java.util.List;
 import java.util.Map;
 
 import be.kdg.t13.politiekebarometer.model.Item;
 import be.kdg.t13.politiekebarometer.model.Notification;
+import be.kdg.t13.politiekebarometer.model.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -34,6 +36,16 @@ public interface PolitiekeBarometerService {
 
     @POST("RequestToken")
     Call<String> requestToken(@Body TokenRequest request);
+
+    @GET("GetUserInfo")
+    Call<User> getUserInfo();
+
+    @GET("GetNotifications")
+    Call<List<Notification>> getNotifications();
+
+    @GET("Search")
+    Call<List<String>> getSearchResults();
+
     /* <DEBUG> */
     @GET("test")
     Call<String> debugApi();

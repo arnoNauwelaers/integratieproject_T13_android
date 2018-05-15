@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private String previousSearch = "";
 
     public static boolean LOADING = false;
-    public static BottomNavigationView NAV;
+    //public static BottomNavigationView NAV;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return true;
             case R.id.action_logout:
-                UserManager.getInstance().logOut();
+                UserManager.getInstance().logOut(this);
                 invalidateOptionsMenu();
                 findViewById(R.id.navigation).findViewById(R.id.navigation_home).performClick();
                 return true;
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        NAV = navigation;
+        //NAV = navigation;
         addEventHandlers();
         finishCreate();
     }
@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void finishCreate() {
         getSupportActionBar().setTitle("Home");
+        UserManager.getTokenFromDevice(this);
         changeFragment(HomeFragment.newInstance());
     }
 
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
     private void changeFragment(Fragment f) {
         if(LOADING) { return; }
         CURRENT_FRAGMENT = f.getClass().getName();
-        ApiManager.getInstance().testApi(this);
+        //ApiManager.getInstance().testApi(this);
         getSupportFragmentManager().beginTransaction()
                 .replace(content.getId(), f, f.getClass().getName())
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
