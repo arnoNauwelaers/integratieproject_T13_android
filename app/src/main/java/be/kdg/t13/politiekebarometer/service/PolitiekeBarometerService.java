@@ -22,17 +22,12 @@ import retrofit2.http.QueryMap;
  */
 
 public interface PolitiekeBarometerService {
-    /*@GET("GetNotifications")
-    Call<Notification[]> getNotifications();
-
-    @GET("Search")
-    //Call<Item[]> getSearchResults(@QueryMap Map<String, String> options);
-    Call<Item[]> getSearchResults();
-
-    @FormUrlEncoded
-    @POST("Login")
-    Call<Integer> login(@Field("Username") String username, @Field("Pssword") String password);
-    */
+    /* <DEBUG> */
+    @GET("test")
+    Call<String> debugApi();
+    @GET("/")
+    Call<String> testConnection();
+    /* </DEBUG> */
 
     @POST("RequestToken")
     Call<String> requestToken(@Body TokenRequest request);
@@ -46,19 +41,9 @@ public interface PolitiekeBarometerService {
     @GET("Search")
     Call<List<String>> getSearchResults();
 
-    /* <DEBUG> */
-    @GET("test")
-    Call<String> debugApi();
-    @GET("/")
-    Call<String> testConnection();
-    /* </DEBUG> */
+    @GET("GetHomeCharts")
+    Call<List<CustomChartData>> getHomeChartData();
 
-    /*
-
-    RequestToken
-    GetUserData
-    GetNotifications
-    GetChartData
-
-     */
+    @GET("GetDashboardCharts")
+    Call<List<CustomChartData>> getDashboardCharts();
 }

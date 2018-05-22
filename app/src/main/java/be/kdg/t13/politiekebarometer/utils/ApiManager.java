@@ -3,6 +3,10 @@ package be.kdg.t13.politiekebarometer.utils;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import com.anychart.anychart.AnyChart;
+import com.anychart.anychart.Chart;
+import com.anychart.anychart.DataEntry;
+import com.anychart.anychart.ValueDataEntry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -20,8 +24,10 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import be.kdg.t13.politiekebarometer.MainActivity;
+import be.kdg.t13.politiekebarometer.injection.ChartAdapter;
 import be.kdg.t13.politiekebarometer.model.Notification;
 import be.kdg.t13.politiekebarometer.model.User;
+import be.kdg.t13.politiekebarometer.service.CustomChartData;
 import be.kdg.t13.politiekebarometer.service.PolitiekeBarometerService;
 import be.kdg.t13.politiekebarometer.service.TokenRequest;
 import be.kdg.t13.politiekebarometer.view.dashboard.DashboardFragment;
@@ -117,6 +123,84 @@ public class ApiManager {
                 LoginFragment.finishLogin(a, frag, true);
             }
         });
+    }
+
+    public void getHomeCharts() {
+        Call<List<CustomChartData>> call = service.getHomeChartData();
+        call.enqueue(new Callback<List<CustomChartData>>() {
+            @Override
+            public void onResponse(Call<List<CustomChartData>> call, Response<List<CustomChartData>> response) {
+                List<Chart> charts = new ArrayList<>();
+                List<DataEntry> data = new ArrayList<>();
+                data.add(new ValueDataEntry("John", 10000));
+                data.add(new ValueDataEntry("Jake", 12000));
+                data.add(new ValueDataEntry("Peter", 18000));
+                charts.add(AnyChart.pie().setData(data));
+                List<DataEntry> data2 = new ArrayList<>();
+                data2.add(new ValueDataEntry("John", 10000));
+                data2.add(new ValueDataEntry("Jake", 12000));
+                data2.add(new ValueDataEntry("Peter", 18000));
+                charts.add(AnyChart.pie().setData(data2));
+                List<DataEntry> data3 = new ArrayList<>();
+                data3.add(new ValueDataEntry("John", 10000));
+                data3.add(new ValueDataEntry("Jake", 12000));
+                data3.add(new ValueDataEntry("Peter", 18000));
+                charts.add(AnyChart.pie().setData(data3));
+                ChartManager.setHomeCharts(charts);
+            }
+            @Override
+            public void onFailure(Call<List<CustomChartData>> call, Throwable t) {
+                List<Chart> charts = new ArrayList<>();
+                List<DataEntry> data = new ArrayList<>();
+                data.add(new ValueDataEntry("John", 10000));
+                data.add(new ValueDataEntry("Jake", 12000));
+                data.add(new ValueDataEntry("Peter", 18000));
+                charts.add(AnyChart.pie().setData(data));
+                List<DataEntry> data2 = new ArrayList<>();
+                data2.add(new ValueDataEntry("John", 10000));
+                data2.add(new ValueDataEntry("Jake", 12000));
+                data2.add(new ValueDataEntry("Peter", 18000));
+                charts.add(AnyChart.pie().setData(data2));
+                List<DataEntry> data3 = new ArrayList<>();
+                data3.add(new ValueDataEntry("John", 10000));
+                data3.add(new ValueDataEntry("Jake", 12000));
+                data3.add(new ValueDataEntry("Peter", 18000));
+                charts.add(AnyChart.pie().setData(data3));
+                ChartManager.setHomeCharts(charts);
+            }
+        });
+
+    }
+
+    public void getDashboardCharts() {
+        Call<List<CustomChartData>> call = service.getHomeChartData();
+        call.enqueue(new Callback<List<CustomChartData>>() {
+            @Override
+            public void onResponse(Call<List<CustomChartData>> call, Response<List<CustomChartData>> response) {
+                List<Chart> charts = new ArrayList<>();
+                List<DataEntry> data = new ArrayList<>();
+                data.add(new ValueDataEntry("John", 10000));
+                data.add(new ValueDataEntry("Jake", 12000));
+                data.add(new ValueDataEntry("Peter", 18000));
+                charts.add(AnyChart.pie().setData(data));
+                List<DataEntry> data2 = new ArrayList<>();
+                data2.add(new ValueDataEntry("John", 10000));
+                data2.add(new ValueDataEntry("Jake", 12000));
+                data2.add(new ValueDataEntry("Peter", 18000));
+                charts.add(AnyChart.pie().setData(data2));
+                List<DataEntry> data3 = new ArrayList<>();
+                data3.add(new ValueDataEntry("John", 10000));
+                data3.add(new ValueDataEntry("Jake", 12000));
+                data3.add(new ValueDataEntry("Peter", 18000));
+                charts.add(AnyChart.pie().setData(data3));
+                ChartManager.setDashboardCharts(charts);
+            }
+            @Override
+            public void onFailure(Call<List<CustomChartData>> call, Throwable t) {
+
+            }
+        });
+
     }
 
     /*public List<Notification> getNotifications() {
