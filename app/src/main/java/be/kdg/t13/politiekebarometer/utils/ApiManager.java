@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -24,18 +23,18 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import be.kdg.t13.politiekebarometer.MainActivity;
-import be.kdg.t13.politiekebarometer.injection.ChartAdapter;
-import be.kdg.t13.politiekebarometer.model.Notification;
 import be.kdg.t13.politiekebarometer.model.User;
-import be.kdg.t13.politiekebarometer.service.CustomChartData;
 import be.kdg.t13.politiekebarometer.service.PolitiekeBarometerService;
+import be.kdg.t13.politiekebarometer.service.charts.ChartItemData;
+import be.kdg.t13.politiekebarometer.service.charts.Item;
+import be.kdg.t13.politiekebarometer.service.charts.SimpleChart;
 import be.kdg.t13.politiekebarometer.service.TokenRequest;
 import be.kdg.t13.politiekebarometer.view.dashboard.DashboardFragment;
 import be.kdg.t13.politiekebarometer.view.login.LoginFragment;
-import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -126,57 +125,35 @@ public class ApiManager {
     }
 
     public void getHomeCharts() {
-        Call<List<CustomChartData>> call = service.getHomeChartData();
-        call.enqueue(new Callback<List<CustomChartData>>() {
+        Call<List<SimpleChart>> call = service.getHomeChartData();
+        call.enqueue(new Callback<List<SimpleChart>>() {
             @Override
-            public void onResponse(Call<List<CustomChartData>> call, Response<List<CustomChartData>> response) {
+            public void onResponse(Call<List<SimpleChart>> call, Response<List<SimpleChart>> response) {
                 List<Chart> charts = new ArrayList<>();
-                List<DataEntry> data = new ArrayList<>();
-                data.add(new ValueDataEntry("John", 10000));
-                data.add(new ValueDataEntry("Jake", 12000));
-                data.add(new ValueDataEntry("Peter", 18000));
-                charts.add(AnyChart.pie().setData(data));
-                List<DataEntry> data2 = new ArrayList<>();
-                data2.add(new ValueDataEntry("John", 10000));
-                data2.add(new ValueDataEntry("Jake", 12000));
-                data2.add(new ValueDataEntry("Peter", 18000));
-                charts.add(AnyChart.pie().setData(data2));
-                List<DataEntry> data3 = new ArrayList<>();
-                data3.add(new ValueDataEntry("John", 10000));
-                data3.add(new ValueDataEntry("Jake", 12000));
-                data3.add(new ValueDataEntry("Peter", 18000));
-                charts.add(AnyChart.pie().setData(data3));
+                for(SimpleChart chart : response.body()) {
+                    List<DataEntry> data = new ArrayList<>();
+                    for(ChartItemData chartData : chart.data) {
+                        for(Item item : chartData.data) {
+                            data.add(new ValueDataEntry(item.name, item.amount));
+                        }
+                    }
+                    charts.add(AnyChart.column().setData(data));
+                }
                 ChartManager.setHomeCharts(charts);
             }
             @Override
-            public void onFailure(Call<List<CustomChartData>> call, Throwable t) {
-                List<Chart> charts = new ArrayList<>();
-                List<DataEntry> data = new ArrayList<>();
-                data.add(new ValueDataEntry("John", 10000));
-                data.add(new ValueDataEntry("Jake", 12000));
-                data.add(new ValueDataEntry("Peter", 18000));
-                charts.add(AnyChart.pie().setData(data));
-                List<DataEntry> data2 = new ArrayList<>();
-                data2.add(new ValueDataEntry("John", 10000));
-                data2.add(new ValueDataEntry("Jake", 12000));
-                data2.add(new ValueDataEntry("Peter", 18000));
-                charts.add(AnyChart.pie().setData(data2));
-                List<DataEntry> data3 = new ArrayList<>();
-                data3.add(new ValueDataEntry("John", 10000));
-                data3.add(new ValueDataEntry("Jake", 12000));
-                data3.add(new ValueDataEntry("Peter", 18000));
-                charts.add(AnyChart.pie().setData(data3));
-                ChartManager.setHomeCharts(charts);
+            public void onFailure(Call<List<SimpleChart>> call, Throwable t) {
+
             }
         });
 
     }
 
     public void getDashboardCharts() {
-        Call<List<CustomChartData>> call = service.getHomeChartData();
-        call.enqueue(new Callback<List<CustomChartData>>() {
+        Call<ResponseBody> call = service.getDashboardCharts();
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<List<CustomChartData>> call, Response<List<CustomChartData>> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 List<Chart> charts = new ArrayList<>();
                 List<DataEntry> data = new ArrayList<>();
                 data.add(new ValueDataEntry("John", 10000));
@@ -196,7 +173,7 @@ public class ApiManager {
                 ChartManager.setDashboardCharts(charts);
             }
             @Override
-            public void onFailure(Call<List<CustomChartData>> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             }
         });
