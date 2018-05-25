@@ -37,7 +37,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class HomeFragment extends Fragment {
-    @BindView(R.id.charts) RecyclerView chartsView;
+    @BindView(R.id.chartsHome) RecyclerView chartsView;
     private List<Chart> charts;
     private ChartAdapter chartAdapter;
     private Unbinder unbinder;

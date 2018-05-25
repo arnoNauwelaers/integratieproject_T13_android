@@ -1,6 +1,7 @@
 package be.kdg.t13.politiekebarometer.utils;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.anychart.anychart.AnyChart;
@@ -23,6 +24,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import be.kdg.t13.politiekebarometer.MainActivity;
+import be.kdg.t13.politiekebarometer.model.Notification;
 import be.kdg.t13.politiekebarometer.model.User;
 import be.kdg.t13.politiekebarometer.service.PolitiekeBarometerService;
 import be.kdg.t13.politiekebarometer.service.charts.ChartItemData;
@@ -143,61 +145,54 @@ public class ApiManager {
             }
             @Override
             public void onFailure(Call<List<SimpleChart>> call, Throwable t) {
-
+                Log.w("ERROR",t);
             }
         });
 
     }
 
     public void getDashboardCharts() {
-        Call<ResponseBody> call = service.getDashboardCharts();
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<List<SimpleChart>> call = service.getDashboardCharts();
+        call.enqueue(new Callback<List<SimpleChart>>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<List<SimpleChart>> call, Response<List<SimpleChart>> response) {
                 List<Chart> charts = new ArrayList<>();
-                List<DataEntry> data = new ArrayList<>();
-                data.add(new ValueDataEntry("John", 10000));
-                data.add(new ValueDataEntry("Jake", 12000));
-                data.add(new ValueDataEntry("Peter", 18000));
-                charts.add(AnyChart.pie().setData(data));
-                List<DataEntry> data2 = new ArrayList<>();
-                data2.add(new ValueDataEntry("John", 10000));
-                data2.add(new ValueDataEntry("Jake", 12000));
-                data2.add(new ValueDataEntry("Peter", 18000));
-                charts.add(AnyChart.pie().setData(data2));
-                List<DataEntry> data3 = new ArrayList<>();
-                data3.add(new ValueDataEntry("John", 10000));
-                data3.add(new ValueDataEntry("Jake", 12000));
-                data3.add(new ValueDataEntry("Peter", 18000));
-                charts.add(AnyChart.pie().setData(data3));
+                for(SimpleChart chart : response.body()) {
+                    List<DataEntry> data = new ArrayList<>();
+                    for(ChartItemData chartData : chart.data) {
+                        for(Item item : chartData.data) {
+                            data.add(new ValueDataEntry(item.name, item.amount));
+                        }
+                    }
+                    Chart androidChart = AnyChart.column();
+                    charts.add(androidChart);
+                }
                 ChartManager.setDashboardCharts(charts);
             }
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+            public void onFailure(Call<List<SimpleChart>> call, Throwable t) {
+                Log.w("ERROR",t);
             }
         });
 
     }
 
-    /*public List<Notification> getNotifications() {
+    public List<Notification> getNotifications() {
         final List<Notification> notifications = new ArrayList<>();
         Call<List<Notification>> call = service.getNotifications();
         call.enqueue(new Callback<List<Notification>>() {
             @Override
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
-                notifications.add(new Notification(1, response.body().toString()));
+                notifications.addAll(response.body());
             }
             @Override
             public void onFailure(Call<List<Notification>> call, Throwable t) {
-                notifications.add(new Notification(1, "Error"));
+                notifications.add(new Notification(1, "Error bij het ophalen van de notifications."));
             }
         });
-        notifications.add(new Notification(1,"test"));
-        notifications.add(new Notification(1,"bart de wever"));
-        notifications.add(new Notification(1,"theo"));
+        notifications.add(new Notification(1,"Welkom bij de Poltieke Barometer app!"));
         return notifications;
-    }*/
+    }
 
     public void setUserInfo(final MainActivity a) {
         Call<User> call = service.getUserInfo();

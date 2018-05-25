@@ -39,5 +39,5 @@ public interface PolitiekeBarometerService {
     Call<List<SimpleChart>> getHomeChartData();
 
     @GET("GetDashboardCharts")
-    Call<ResponseBody> getDashboardCharts();
+    Call<List<SimpleChart>> getDashboardCharts();
 }
