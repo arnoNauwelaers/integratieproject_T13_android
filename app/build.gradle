@@ -41,4 +41,5 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
     compile 'com.github.AnyChart:AnyChart-Android:0.1.9'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 }

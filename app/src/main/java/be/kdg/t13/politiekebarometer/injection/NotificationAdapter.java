@@ -35,13 +35,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationViewHo
     }
     @Override
     public void onBindViewHolder(NotificationViewHolder holder, final int position) {
-        Notification notification = notifications.get(position);
+        final Notification notification = notifications.get(position);
         holder.title.setText("Nieuwe melding");
         holder.msg.setText(notification.getMessage());
         holder.msg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "Selected index " + position, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, notification.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

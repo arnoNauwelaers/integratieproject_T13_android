@@ -21,7 +21,7 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <com.anychart.anychart.AnyChartView
+        <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/chart"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

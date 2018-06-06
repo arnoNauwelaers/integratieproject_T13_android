@@ -29,6 +29,7 @@ import be.kdg.t13.politiekebarometer.injection.ChartAdapter;
 import be.kdg.t13.politiekebarometer.injection.NotificationAdapter;
 import be.kdg.t13.politiekebarometer.injection.NotificationRecyclerTouchHelper;
 import be.kdg.t13.politiekebarometer.model.Notification;
+import be.kdg.t13.politiekebarometer.service.charts.SimpleChart;
 import be.kdg.t13.politiekebarometer.utils.ApiManager;
 import be.kdg.t13.politiekebarometer.utils.ChartManager;
 import be.kdg.t13.politiekebarometer.utils.UserManager;
@@ -38,7 +39,7 @@ import butterknife.Unbinder;
 
 public class HomeFragment extends Fragment {
     @BindView(R.id.chartsHome) RecyclerView chartsView;
-    private List<Chart> charts;
+    private List<SimpleChart> charts;
     private ChartAdapter chartAdapter;
     private Unbinder unbinder;
 

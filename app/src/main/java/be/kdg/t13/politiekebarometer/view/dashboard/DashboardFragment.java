@@ -20,6 +20,7 @@ import java.util.List;
 import be.kdg.t13.politiekebarometer.MainActivity;
 import be.kdg.t13.politiekebarometer.R;
 import be.kdg.t13.politiekebarometer.injection.ChartAdapter;
+import be.kdg.t13.politiekebarometer.service.charts.SimpleChart;
 import be.kdg.t13.politiekebarometer.utils.ChartManager;
 import be.kdg.t13.politiekebarometer.utils.UserManager;
 import be.kdg.t13.politiekebarometer.view.login.LoginFragment;
@@ -30,7 +31,7 @@ import butterknife.Unbinder;
 
 public class DashboardFragment extends Fragment {
     @Nullable @BindView(R.id.chartsDash) RecyclerView chartsView;
-    private List<Chart> charts;
+    private List<SimpleChart> charts;
     private ChartAdapter chartAdapter;
     private Unbinder unbinder;
 

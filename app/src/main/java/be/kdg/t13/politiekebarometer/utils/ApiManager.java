@@ -131,17 +131,7 @@ public class ApiManager {
         call.enqueue(new Callback<List<SimpleChart>>() {
             @Override
             public void onResponse(Call<List<SimpleChart>> call, Response<List<SimpleChart>> response) {
-                List<Chart> charts = new ArrayList<>();
-                for(SimpleChart chart : response.body()) {
-                    List<DataEntry> data = new ArrayList<>();
-                    for(ChartItemData chartData : chart.data) {
-                        for(Item item : chartData.data) {
-                            data.add(new ValueDataEntry(item.name, item.amount));
-                        }
-                    }
-                    charts.add(AnyChart.column().setData(data));
-                }
-                ChartManager.setHomeCharts(charts);
+                ChartManager.setHomeCharts(response.body());
             }
             @Override
             public void onFailure(Call<List<SimpleChart>> call, Throwable t) {
@@ -156,18 +146,7 @@ public class ApiManager {
         call.enqueue(new Callback<List<SimpleChart>>() {
             @Override
             public void onResponse(Call<List<SimpleChart>> call, Response<List<SimpleChart>> response) {
-                List<Chart> charts = new ArrayList<>();
-                for(SimpleChart chart : response.body()) {
-                    List<DataEntry> data = new ArrayList<>();
-                    for(ChartItemData chartData : chart.data) {
-                        for(Item item : chartData.data) {
-                            data.add(new ValueDataEntry(item.name, item.amount));
-                        }
-                    }
-                    Chart androidChart = AnyChart.column();
-                    charts.add(androidChart);
-                }
-                ChartManager.setDashboardCharts(charts);
+                ChartManager.setDashboardCharts(response.body());
             }
             @Override
             public void onFailure(Call<List<SimpleChart>> call, Throwable t) {

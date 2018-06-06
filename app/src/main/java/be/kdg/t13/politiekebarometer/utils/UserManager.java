@@ -34,6 +34,8 @@ public class UserManager {
             instance = new UserManager();
             notifications = new ArrayList<>();
             //updateNotifications();
+            notifications.add(new Notification(0, "Bart de Wever is #1 trending."));
+            notifications.add(new Notification(0, "Theo Francken heeft de afgelopen 48 uur 12 keer het woord immigratie in zijn tweets gebruikt."));
         }
         return instance;
     }

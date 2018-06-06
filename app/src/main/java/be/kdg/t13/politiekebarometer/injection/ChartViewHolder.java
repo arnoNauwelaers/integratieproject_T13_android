@@ -11,6 +11,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.anychart.anychart.AnyChartView;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
 
 import be.kdg.t13.politiekebarometer.R;
 import butterknife.BindView;
@@ -18,7 +21,7 @@ import butterknife.ButterKnife;
 
 public class ChartViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.title) public TextView title;
-    @BindView(R.id.chart) public AnyChartView chart;
+    @BindView(R.id.chart) public PieChart chart;
 
     public ChartViewHolder(View itemView) {
         super(itemView);
